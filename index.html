@@ -188,20 +188,39 @@
                 <button onclick="window.submitAuth()" id="auth-submit-btn" class="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-xl font-bold shadow-lg shadow-pink-200 active:scale-95 transition flex justify-center items-center gap-2 mt-4">
                     <i class="fas fa-sign-in-alt"></i> Lanjut
                 </button>
+                
+                <div class="relative py-2">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-pink-100"></div>
+                    </div>
+                    <div class="relative flex justify-center text-xs uppercase">
+                        <span class="bg-white px-3 text-pink-400 font-semibold">atau</span>
+                    </div>
+                </div>
+
+                <button onclick="window.signInWithGoogle()" id="google-auth-btn" class="w-full bg-white hover:bg-pink-50/50 text-slate-700 py-3.5 px-4 rounded-xl font-bold border border-pink-100 shadow-sm active:scale-95 transition flex justify-center items-center gap-3">
+                    <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                    </svg>
+                    <span>Masuk dengan Google</span>
+                </button>
             </div>
         </div>
     </div>
 
     <div id="app-wrapper" class="hidden">
     <!-- Header -->
-    <header class="bg-white/30 backdrop-blur-md border-b border-white/40 p-4 sm:p-6 rounded-b-[40px] shadow-sm sticky top-0 z-50" style="width: 1159.5px;">
-        <div class="flex justify-between items-center max-w-md mx-auto relative" style="width: 421.988px;">
+    <header class="bg-white/30 backdrop-blur-md border-b border-white/40 p-4 sm:p-6 rounded-b-[40px] shadow-sm sticky top-0 z-50">
+        <div class="flex justify-between items-center max-w-md mx-auto relative">
             <div class="flex items-center gap-2 sm:gap-3 shrink-0">
                 <div class="w-8 h-8 sm:w-10 sm:h-10 bg-pink-500 rounded-[14px] sm:rounded-2xl flex items-center justify-center text-white shadow-lg animate-float shrink-0">
                     <i class="fas fa-baby-carriage text-base sm:text-lg"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-pink-900 leading-none flex items-center gap-2" style="width: 109.992px; height: 28.9922px;">
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-pink-900 leading-none flex items-center gap-2">
                         BundaCare
                     </h1>
                     <p class="text-[9px] sm:text-[10px] uppercase tracking-widest text-pink-600 font-bold mt-1 flex items-center gap-1">
@@ -210,9 +229,9 @@
                     </p>
                 </div>
             </div>
-            <div class="flex justify-end items-center gap-1.5 sm:gap-2" style="width: 231.113px; height: 33.5px;">
+            <div class="flex justify-end items-center gap-1.5 sm:gap-2">
                 <div id="header-user-profile" class="hidden relative">
-                   <div onclick="toggleProfileMenu()" class="cursor-pointer flex items-center gap-2 bg-white/50 rounded-full shadow-sm border border-white hover:bg-white transition pr-2" style="width: 85.699px;">
+                   <div onclick="toggleProfileMenu()" class="cursor-pointer flex items-center gap-2 bg-white/50 rounded-full shadow-sm border border-white hover:bg-white transition pr-2">
                        <img id="user-avatar" src="" alt="User" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover shrink-0" />
                        <span id="user-name-display" class="text-[11px] font-bold text-pink-700 max-w-[70px] truncate hidden sm:block"></span>
                        <i class="fas fa-chevron-down text-[10px] text-pink-500 mr-1"></i>
@@ -230,14 +249,14 @@
                        </button>
                    </div>
                 </div>
-                <button onclick="openEmergencyModal()" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-sm bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center transition active:scale-95 backdrop-blur-md relative shrink-0" title="Kontak Darurat" data-i18n-title="tooltipEmergency" style="width: 27px;">
+                <button onclick="openEmergencyModal()" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-sm bg-red-100 text-red-600 hover:bg-red-200 flex items-center justify-center transition active:scale-95 backdrop-blur-md relative shrink-0" title="Kontak Darurat" data-i18n-title="tooltipEmergency">
                     <i class="fas fa-phone-alt text-xs sm:text-sm"></i>
                     <span class="absolute top-0 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-red-500 rounded-full border border-white sm:border-2"></span>
                 </button>
-                <button onclick="shareProgress()" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-sm bg-white/50 text-pink-600 hover:bg-white flex items-center justify-center transition active:scale-95 backdrop-blur-md shrink-0" title="Bagikan" data-i18n-title="tooltipShare" style="width: 26px;">
+                <button onclick="shareProgress()" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-sm bg-white/50 text-pink-600 hover:bg-white flex items-center justify-center transition active:scale-95 backdrop-blur-md shrink-0" title="Bagikan" data-i18n-title="tooltipShare">
                     <i class="fas fa-share-alt text-xs sm:text-sm"></i>
                 </button>
-                <button onclick="openSettings()" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-sm bg-white/50 text-pink-600 hover:bg-white flex items-center justify-center transition active:scale-95 backdrop-blur-md shrink-0" title="Pengaturan" data-i18n-title="tooltipSettings" style="height: 38px; width: 28px;">
+                <button onclick="openSettings()" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-sm bg-white/50 text-pink-600 hover:bg-white flex items-center justify-center transition active:scale-95 backdrop-blur-md shrink-0" title="Pengaturan" data-i18n-title="tooltipSettings">
                     <i class="fas fa-palette text-xs sm:text-sm"></i>
                 </button>
                 <button onclick="resetData()" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-sm bg-pink-200 text-pink-600 hover:bg-pink-300 flex items-center justify-center transition active:scale-95 shrink-0" title="Reset Data" data-i18n-title="tooltipReset">
@@ -3751,7 +3770,7 @@ Diingatkan oleh BundaCare App 💖`;
     <!-- Firebase Auth Module -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         
         const firebaseConfig = {
           projectId: "database-online-750f1",
@@ -3768,6 +3787,29 @@ Diingatkan oleh BundaCare App 💖`;
         const auth = getAuth(app);
         
         window.bundaCareAuth = auth;
+        window.signInWithGoogle = async () => {
+            const provider = new GoogleAuthProvider();
+            const btn = document.getElementById('google-auth-btn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Proses...';
+            btn.disabled = true;
+            try {
+                await signInWithPopup(auth, provider);
+                window.showToast(currentLang === 'id' ? "Berhasil masuk dengan Google!" : "Logged in successfully with Google!", "success");
+            } catch (e) {
+                console.error("Google Auth failed:", e);
+                let msg = e.message || "Gagal masuk Google";
+                if (e.code === 'auth/popup-closed-by-user') {
+                    msg = currentLang === 'id' ? "Login dibatalkan (pop-up ditutup)." : "Login cancelled (popup closed).";
+                } else if (e.code === 'auth/cancelled-popup-request') {
+                    msg = currentLang === 'id' ? "Proses login ganda terdeteksi, mohon coba lagi." : "Multiple popup requests detected, please try again.";
+                }
+                window.showToast(msg, "error");
+            } finally {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        };
         window.submitAuth = async () => {
             const name = document.getElementById('auth-name').value.trim();
             
