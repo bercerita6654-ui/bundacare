@@ -1,6 +1,6 @@
 {
   "name": "Bunda-Care",
-  "description": "",
+  "description": "Aplikasi asisten dan pemantau kehamilan cerdas dengan estimasi kehamilan akurat, panduan trimester, dan jadwal kesehatan.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -280,6 +280,9 @@
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wider" data-i18n="hphtLabel">Tanggal HPHT</label>
                         <input type="date" id="hpht-input" class="w-full p-4 rounded-xl border border-pink-200 focus:ring-2 focus:ring-pink-500 outline-none bg-white">
                     </div>
+                    <div class="bg-pink-50/80 p-3.5 rounded-2xl border border-pink-100 text-xs text-pink-800 leading-relaxed font-medium">
+                        <span data-i18n="setupHphtTip">💡 <b>Panduan HPHT:</b> Masukkan tanggal hari <i>pertama</i> darah haid terakhir keluar (bukan saat haid selesai). Jika siklus haid tidak teratur, estimasi dapat dicocokkan kembali dengan hasil USG dokter.</span>
+                    </div>
                     <button onclick="calculatePregnancy()" class="w-full pink-gradient text-white py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-transform hover:shadow-pink-300/50" data-i18n="calcBtn">
                         Hitung Akurat
                     </button>
@@ -326,6 +329,373 @@
                         <p class="text-[10px] font-bold text-pink-400 uppercase mb-2" data-i18n="conceptionLabel">Tanggal Konsepsi</p>
                         <p class="text-lg font-bold text-pink-900 leading-tight" id="conception-date">-</p>
                         <p class="text-[10px] text-slate-500 mt-1 font-medium" data-i18n="conceptionDesc">Awal mula perjalanan</p>
+                    </div>
+                </div>
+
+                <!-- Informasi Estimasi Kehamilan (Pregnancy Estimation Details) -->
+                <div class="glass-morphism p-5 sm:p-7 rounded-[32px] border border-white/60 relative overflow-hidden bg-gradient-to-br from-white/90 via-pink-50/30 to-white/80 shadow-sm space-y-4">
+                    <i class="fas fa-calendar-alt absolute -right-6 -bottom-6 text-9xl text-pink-500/5 rotate-6 pointer-events-none"></i>
+
+                    <!-- Header -->
+                    <div class="flex justify-between items-start relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-gradient-to-br from-pink-500 to-rose-500 w-10 h-10 flex items-center justify-center rounded-[16px] text-white shadow-md shadow-pink-200 shrink-0">
+                                <i class="fas fa-calculator text-base"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                                    <span data-i18n="estPregnancyTitle">Informasi Estimasi Kehamilan</span>
+                                    <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-pink-100 text-pink-600 border border-pink-200">Naegele</span>
+                                </h3>
+                                <p class="text-[11px] text-slate-500 font-medium" data-i18n="estPregnancySubtitle">Metode Obstetri Medis & Rincian Tahapan</p>
+                            </div>
+                        </div>
+                        <button onclick="openEditHphtModal()" class="px-3 py-1.5 bg-pink-100 hover:bg-pink-200 text-pink-700 text-xs font-bold rounded-xl transition flex items-center gap-1.5 active:scale-95 shadow-xs shrink-0">
+                            <i class="fas fa-pen text-[10px]"></i>
+                            <span data-i18n="estEditHphtBtn">Ubah HPHT</span>
+                        </button>
+                    </div>
+
+                    <!-- Grid: Key Estimation Data -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-10">
+                        <!-- Rentang Cukup Bulan (Full-Term Window) -->
+                        <div class="bg-white/70 p-3.5 rounded-2xl border border-white shadow-xs">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-bold text-pink-500 uppercase tracking-wider" data-i18n="estFullTermTitle">Jendela Lahir Cukup Bulan</span>
+                                <i class="fas fa-shield-heart text-pink-400 text-xs"></i>
+                            </div>
+                            <p class="text-base font-bold text-slate-800 leading-snug" id="est-full-term-range">-</p>
+                            <p class="text-[10px] text-slate-500 mt-1 font-medium leading-relaxed" data-i18n="estFullTermSub">Minggu 37 - 42 (Masa Persalinan Wajar)</p>
+                            <p class="text-[9px] text-pink-600/90 mt-1.5 bg-pink-50/80 p-1.5 rounded-lg border border-pink-100/60 leading-tight">
+                                <i class="fas fa-info-circle mr-1"></i><span data-i18n="estFullTermNote">80-90% bayi lahir sehat pada rentang minggu 37-41, bukan tepat di hari HPL.</span>
+                            </p>
+                        </div>
+
+                        <!-- Usia Janin Sebenarnya (Embryonic Age) -->
+                        <div class="bg-white/70 p-3.5 rounded-2xl border border-white shadow-xs flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-[10px] font-bold text-purple-600 uppercase tracking-wider" data-i18n="estEmbryoTitle">Usia Embrio/Janin Asli</span>
+                                    <i class="fas fa-baby text-purple-400 text-xs"></i>
+                                </div>
+                                <p class="text-base font-bold text-slate-800 leading-snug" id="est-embryo-age">-</p>
+                                <p class="text-[10px] text-slate-500 mt-1 font-medium leading-relaxed" data-i18n="estEmbryoSub">Dihitung sejak pembuahan (~14 hari setelah HPHT)</p>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
+                                <span class="text-slate-400 font-medium" data-i18n="estZodiacTitle">Estimasi Zodiak Bayi:</span>
+                                <span id="est-zodiac-info" class="font-bold text-slate-700 bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full border border-purple-100">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Hari Dijalani & Sisa Hari -->
+                        <div class="bg-white/70 p-3.5 rounded-2xl border border-white shadow-xs">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider" data-i18n="estDaysProgressTitle">Perjalanan Hari Kehamilan</span>
+                                <i class="fas fa-hourglass-half text-blue-400 text-xs"></i>
+                            </div>
+                            <p class="text-base font-bold text-slate-800 leading-snug" id="est-days-progress">-</p>
+                            <p class="text-[10px] text-blue-600 font-bold mt-1" id="est-remaining-detail">-</p>
+                        </div>
+
+                        <!-- Status Klasifikasi Kematangan -->
+                        <div class="bg-white/70 p-3.5 rounded-2xl border border-white shadow-xs">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider" data-i18n="estMaturityTitle">Klasifikasi Kematangan</span>
+                                <i class="fas fa-check-circle text-emerald-400 text-xs"></i>
+                            </div>
+                            <div class="mt-0.5">
+                                <span id="est-maturity-badge" class="inline-block px-2.5 py-1 rounded-xl text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200 leading-tight">-</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 mt-1.5 leading-relaxed font-medium" id="est-maturity-desc">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Trimester Estimation Timeline -->
+                    <div class="bg-white/80 p-3.5 sm:p-4 rounded-2xl border border-white shadow-xs relative z-10 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fas fa-calendar-week text-pink-500"></i>
+                                <span data-i18n="estTrimesterTimelineTitle">Estimasi Periode Trimester</span>
+                            </h4>
+                            <span class="text-[9px] text-slate-400 font-medium">Berdasarkan HPHT</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                            <!-- Trimester 1 -->
+                            <div id="est-tri1-card" class="p-3 rounded-xl border bg-slate-50/60 border-slate-100 transition-all">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-bold text-slate-800 text-[11px]">Trimester 1</span>
+                                    <span id="est-tri1-badge" class="text-[9px] font-bold px-1.5 py-0.5 rounded-md">-</span>
+                                </div>
+                                <p class="text-[10px] font-bold text-pink-600 font-mono" id="est-tri1-dates">-</p>
+                                <p class="text-[9px] text-slate-500 mt-1 leading-tight" data-i18n="estTri1Sub">Organogenesis & Detak Jantung</p>
+                            </div>
+
+                            <!-- Trimester 2 -->
+                            <div id="est-tri2-card" class="p-3 rounded-xl border bg-slate-50/60 border-slate-100 transition-all">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-bold text-slate-800 text-[11px]">Trimester 2</span>
+                                    <span id="est-tri2-badge" class="text-[9px] font-bold px-1.5 py-0.5 rounded-md">-</span>
+                                </div>
+                                <p class="text-[10px] font-bold text-pink-600 font-mono" id="est-tri2-dates">-</p>
+                                <p class="text-[9px] text-slate-500 mt-1 leading-tight" data-i18n="estTri2Sub">Pertumbuhan Pesat & Gerak</p>
+                            </div>
+
+                            <!-- Trimester 3 -->
+                            <div id="est-tri3-card" class="p-3 rounded-xl border bg-slate-50/60 border-slate-100 transition-all">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-bold text-slate-800 text-[11px]">Trimester 3</span>
+                                    <span id="est-tri3-badge" class="text-[9px] font-bold px-1.5 py-0.5 rounded-md">-</span>
+                                </div>
+                                <p class="text-[10px] font-bold text-pink-600 font-mono" id="est-tri3-dates">-</p>
+                                <p class="text-[9px] text-slate-500 mt-1 leading-tight" data-i18n="estTri3Sub">Pematangan Paru & Persiapan Lahir</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Medical Info Accordion -->
+                    <div class="relative z-10">
+                        <button onclick="toggleEstExplanation()" id="btn-toggle-est-exp" class="w-full bg-white/60 hover:bg-white text-slate-700 py-2.5 px-4 rounded-xl text-xs font-bold border border-white/80 transition flex items-center justify-between shadow-2xs">
+                            <span class="flex items-center gap-2">
+                                <i class="fas fa-graduation-cap text-pink-500"></i>
+                                <span data-i18n="estHowTitle">Bagaimana Estimasi Kehamilan Dihitung?</span>
+                            </span>
+                            <i class="fas fa-chevron-down text-slate-400 transition-transform duration-300" id="icon-toggle-est-exp"></i>
+                        </button>
+                        <div id="est-explanation-box" class="hidden mt-2 p-4 bg-white/80 rounded-2xl border border-white text-xs text-slate-600 space-y-2.5 leading-relaxed shadow-sm">
+                            <p data-i18n="estHowDesc1"></p>
+                            <p data-i18n="estHowDesc2"></p>
+                            <p data-i18n="estHowDesc3"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Pintar Estimasi Tanggal Kehamilan (Smart Date Explorer) -->
+                <div class="glass-morphism p-5 sm:p-7 rounded-[32px] border border-white/70 relative overflow-hidden bg-gradient-to-br from-white/95 via-rose-50/30 to-white/90 shadow-sm space-y-5" id="smart-filter-container">
+                    <i class="fas fa-magic absolute -right-6 -bottom-6 text-9xl text-pink-500/5 rotate-12 pointer-events-none"></i>
+                    
+                    <!-- Header -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-gradient-to-br from-pink-500 via-rose-500 to-purple-600 w-11 h-11 flex items-center justify-center rounded-[18px] text-white shadow-md shadow-pink-200 shrink-0">
+                                <i class="fas fa-filter text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                                    <span data-i18n="smartFilterTitle">Filter Pintar Estimasi Tanggal</span>
+                                    <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-pink-100 text-pink-600 border border-pink-200 flex items-center gap-1">
+                                        <i class="fas fa-bolt text-[8px]"></i> Real-time
+                                    </span>
+                                </h3>
+                                <p class="text-[11px] text-slate-500 font-medium" data-i18n="smartFilterSubtitle">Simulasi & cek usia janin di tanggal tertentu (misal: 2 September) atau cari tanggal target</p>
+                            </div>
+                        </div>
+
+                        <!-- Mode Switcher Tabs -->
+                        <div class="flex p-1 bg-slate-100/90 rounded-2xl border border-slate-200/60 shrink-0 text-xs font-bold self-start sm:self-auto">
+                            <button type="button" onclick="switchSmartTab('target-date')" id="tab-btn-target-date" class="px-3.5 py-1.5 rounded-xl transition-all shadow-xs bg-white text-pink-600 cursor-pointer">
+                                <i class="fas fa-calendar-day mr-1.5"></i><span data-i18n="smartTabTargetDate">Cek Tanggal Pilihan</span>
+                            </button>
+                            <button type="button" onclick="switchSmartTab('find-milestone')" id="tab-btn-find-milestone" class="px-3.5 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 cursor-pointer">
+                                <i class="fas fa-bullseye mr-1.5"></i><span data-i18n="smartTabFindDate">Cari Tanggal Usia</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mode 1: Cek Usia di Tanggal Pilihan (e.g. 2 September) -->
+                    <div id="smart-panel-target-date" class="space-y-4 relative z-10">
+                        <!-- Date Input & Quick Presets -->
+                        <div class="bg-white/85 p-4 rounded-2xl border border-white shadow-xs space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <label for="smart-target-date-input" class="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="fas fa-calendar-alt text-pink-500"></i>
+                                    <span data-i18n="smartDateInputLabel">Pilih Tanggal Target yang Ingin Dicek:</span>
+                                </label>
+                                <span id="smart-target-dayname" class="text-[11px] font-bold text-pink-600 bg-pink-50 px-2.5 py-0.5 rounded-full border border-pink-100 self-start sm:self-auto">
+                                    Pilih tanggal di bawah
+                                </span>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row gap-2.5">
+                                <div class="relative flex-1">
+                                    <input type="date" id="smart-target-date-input" onchange="calcSmartTargetDate()" class="w-full p-3 rounded-xl border border-pink-200 focus:ring-2 focus:ring-pink-500 outline-none bg-white text-slate-800 font-bold text-sm shadow-2xs cursor-pointer">
+                                </div>
+                                <button type="button" onclick="calcSmartTargetDate()" class="px-5 py-3 pink-gradient text-white rounded-xl font-bold text-xs shadow-md shadow-pink-200 active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer">
+                                    <i class="fas fa-calculator text-xs"></i>
+                                    <span data-i18n="smartBtnCheck">Hitung Estimasi</span>
+                                </button>
+                            </div>
+
+                            <!-- Quick Preset Filter Chips -->
+                            <div class="pt-1">
+                                <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                    <i class="fas fa-bolt text-amber-500"></i>
+                                    <span data-i18n="smartDatePresetsLabel">Pintasan Cepat:</span>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5 text-xs">
+                                    <button type="button" onclick="setSmartPreset('today')" class="px-2.5 py-1 bg-slate-100 hover:bg-pink-100 hover:text-pink-600 text-slate-600 rounded-lg text-[11px] font-medium transition active:scale-95 cursor-pointer">
+                                        ⚡ <span data-i18n="smartPresetToday">Hari Ini</span>
+                                    </button>
+                                    <button type="button" onclick="setSmartPreset('plus2w')" class="px-2.5 py-1 bg-slate-100 hover:bg-pink-100 hover:text-pink-600 text-slate-600 rounded-lg text-[11px] font-medium transition active:scale-95 cursor-pointer">
+                                        +2 Minggu
+                                    </button>
+                                    <button type="button" onclick="setSmartPreset('plus1m')" class="px-2.5 py-1 bg-slate-100 hover:bg-pink-100 hover:text-pink-600 text-slate-600 rounded-lg text-[11px] font-medium transition active:scale-95 cursor-pointer">
+                                        +1 Bulan
+                                    </button>
+                                    <button type="button" onclick="setSmartPreset('plus2m')" class="px-2.5 py-1 bg-slate-100 hover:bg-pink-100 hover:text-pink-600 text-slate-600 rounded-lg text-[11px] font-medium transition active:scale-95 cursor-pointer">
+                                        +2 Bulan
+                                    </button>
+                                    <button type="button" onclick="setSmartPreset('sep2')" class="px-2.5 py-1 bg-pink-100/90 hover:bg-pink-200 text-pink-700 rounded-lg text-[11px] font-bold border border-pink-200 transition active:scale-95 shadow-2xs cursor-pointer">
+                                        🌟 2 September
+                                    </button>
+                                    <button type="button" onclick="setSmartPreset('tm3')" class="px-2.5 py-1 bg-slate-100 hover:bg-pink-100 hover:text-pink-600 text-slate-600 rounded-lg text-[11px] font-medium transition active:scale-95 cursor-pointer">
+                                        Awal TM 3 (28 Mgg)
+                                    </button>
+                                    <button type="button" onclick="setSmartPreset('fullterm')" class="px-2.5 py-1 bg-slate-100 hover:bg-pink-100 hover:text-pink-600 text-slate-600 rounded-lg text-[11px] font-medium transition active:scale-95 cursor-pointer">
+                                        Cukup Bulan (37 Mgg)
+                                    </button>
+                                    <button type="button" onclick="setSmartPreset('edd')" class="px-2.5 py-1 bg-slate-100 hover:bg-pink-100 hover:text-pink-600 text-slate-600 rounded-lg text-[11px] font-medium transition active:scale-95 cursor-pointer">
+                                        Hari HPL (40 Mgg)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Result Card -->
+                        <div id="smart-result-card" class="bg-gradient-to-br from-white via-pink-50/40 to-white p-4 sm:p-5 rounded-2xl border border-pink-100 shadow-sm space-y-4">
+                            <!-- Top: Selected Date and Distance -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-pink-100/80 pb-3">
+                                <div>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block" data-i18n="smartResultTargetDateLabel">Estimasi di Tanggal:</span>
+                                    <h4 id="smart-res-date-str" class="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
+                                        -
+                                    </h4>
+                                </div>
+                                <div id="smart-res-distance-badge" class="px-3 py-1 bg-pink-100 text-pink-700 font-bold text-xs rounded-xl border border-pink-200">
+                                    -
+                                </div>
+                            </div>
+
+                            <!-- Main Metric Grid -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <!-- Usia Kandungan -->
+                                <div class="bg-white/80 p-3.5 rounded-xl border border-white shadow-2xs">
+                                    <span class="text-[10px] font-bold text-pink-500 uppercase tracking-wider block" data-i18n="smartAgeAtDateLabel">Usia Kandungan</span>
+                                    <p id="smart-res-age" class="text-lg sm:text-xl font-extrabold text-pink-900 mt-0.5 leading-tight">-</p>
+                                    <p id="smart-res-months" class="text-[11px] text-slate-500 font-medium mt-1">-</p>
+                                </div>
+
+                                <!-- Trimester & Fase -->
+                                <div class="bg-white/80 p-3.5 rounded-xl border border-white shadow-2xs">
+                                    <span class="text-[10px] font-bold text-purple-600 uppercase tracking-wider block" data-i18n="smartTrimesterLabel">Trimester & Fase</span>
+                                    <p id="smart-res-trimester" class="text-base font-bold text-slate-800 mt-0.5 leading-tight">-</p>
+                                    <p id="smart-res-trimester-sub" class="text-[11px] text-slate-500 font-medium mt-1">-</p>
+                                </div>
+
+                                <!-- Perjalanan Hari -->
+                                <div class="bg-white/80 p-3.5 rounded-xl border border-white shadow-2xs">
+                                    <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider block" data-i18n="smartPregProgressLabel">Progres Kehamilan</span>
+                                    <p id="smart-res-day-progress" class="text-base font-bold text-slate-800 mt-0.5 leading-tight">-</p>
+                                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2 border border-slate-200/50">
+                                        <div id="smart-res-progress-bar" class="h-full bg-gradient-to-r from-pink-400 to-rose-500 transition-all duration-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fetal Development & Medical Milestones for this date -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <!-- Fetal Size & Development -->
+                                <div class="bg-white/90 p-3.5 rounded-xl border border-pink-100/60">
+                                    <div class="flex items-center gap-2 mb-1.5">
+                                        <div class="w-7 h-7 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center text-xs">
+                                            <i class="fas fa-baby"></i>
+                                        </div>
+                                        <span class="text-xs font-bold text-slate-800" data-i18n="smartBabySizeAtDateLabel">Ukuran & Kondisi Janin</span>
+                                    </div>
+                                    <p id="smart-res-baby-size" class="text-xs font-bold text-pink-700 leading-snug mb-1">-</p>
+                                    <p id="smart-res-baby-desc" class="text-[11px] text-slate-600 leading-relaxed font-medium">-</p>
+                                </div>
+
+                                <!-- Medical Milestone / Agenda -->
+                                <div class="bg-white/90 p-3.5 rounded-xl border border-pink-100/60">
+                                    <div class="flex items-center gap-2 mb-1.5">
+                                        <div class="w-7 h-7 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-xs">
+                                            <i class="fas fa-stethoscope"></i>
+                                        </div>
+                                        <span class="text-xs font-bold text-slate-800" data-i18n="smartMilestoneAgendaLabel">Agenda & Saran Medis</span>
+                                    </div>
+                                    <p id="smart-res-medical-title" class="text-xs font-bold text-purple-700 leading-snug mb-1">-</p>
+                                    <p id="smart-res-medical-desc" class="text-[11px] text-slate-600 leading-relaxed font-medium">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mode 2: Cari Tanggal Berdasarkan Minggu (Find Date by Week) -->
+                    <div id="smart-panel-find-milestone" class="hidden space-y-4 relative z-10">
+                        <div class="bg-white/85 p-4 rounded-2xl border border-white shadow-xs space-y-3">
+                            <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fas fa-bullseye text-pink-500"></i>
+                                <span data-i18n="smartSelectWeekLabel">Pilih Target Usia Kandungan yang Ingin Dicari Tanggalnya:</span>
+                            </label>
+                            
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                <button type="button" onclick="selectSmartWeek(12)" class="smart-week-btn p-2.5 rounded-xl border border-slate-200 bg-white hover:border-pink-300 text-left transition active:scale-95 cursor-pointer" data-week="12">
+                                    <span class="block text-xs font-bold text-slate-800">12 Minggu</span>
+                                    <span class="block text-[10px] text-slate-500">Akhir TM 1 (Skrining)</span>
+                                </button>
+                                <button type="button" onclick="selectSmartWeek(16)" class="smart-week-btn p-2.5 rounded-xl border border-slate-200 bg-white hover:border-pink-300 text-left transition active:scale-95 cursor-pointer" data-week="16">
+                                    <span class="block text-xs font-bold text-slate-800">16 Minggu</span>
+                                    <span class="block text-[10px] text-slate-500">Ketahui Gender</span>
+                                </button>
+                                <button type="button" onclick="selectSmartWeek(20)" class="smart-week-btn p-2.5 rounded-xl border border-slate-200 bg-white hover:border-pink-300 text-left transition active:scale-95 cursor-pointer" data-week="20">
+                                    <span class="block text-xs font-bold text-slate-800">20 Minggu</span>
+                                    <span class="block text-[10px] text-slate-500">Setengah Perjalanan</span>
+                                </button>
+                                <button type="button" onclick="selectSmartWeek(24)" class="smart-week-btn p-2.5 rounded-xl border border-slate-200 bg-white hover:border-pink-300 text-left transition active:scale-95 cursor-pointer" data-week="24">
+                                    <span class="block text-xs font-bold text-slate-800">24 Minggu</span>
+                                    <span class="block text-[10px] text-slate-500">Cek Gula Darah</span>
+                                </button>
+                                <button type="button" onclick="selectSmartWeek(28)" class="smart-week-btn p-2.5 rounded-xl border border-slate-200 bg-white hover:border-pink-300 text-left transition active:scale-95 cursor-pointer" data-week="28">
+                                    <span class="block text-xs font-bold text-slate-800">28 Minggu</span>
+                                    <span class="block text-[10px] text-pink-600 font-bold">Awal Trimester 3</span>
+                                </button>
+                                <button type="button" onclick="selectSmartWeek(32)" class="smart-week-btn p-2.5 rounded-xl border border-slate-200 bg-white hover:border-pink-300 text-left transition active:scale-95 cursor-pointer" data-week="32">
+                                    <span class="block text-xs font-bold text-slate-800">32 Minggu</span>
+                                    <span class="block text-[10px] text-slate-500">USG 4D Wajah</span>
+                                </button>
+                                <button type="button" onclick="selectSmartWeek(37)" class="smart-week-btn p-2.5 rounded-xl border border-slate-200 bg-white hover:border-pink-300 text-left transition active:scale-95 cursor-pointer" data-week="37">
+                                    <span class="block text-xs font-bold text-slate-800">37 Minggu</span>
+                                    <span class="block text-[10px] text-emerald-600 font-bold">Cukup Bulan Awal</span>
+                                </button>
+                                <button type="button" onclick="selectSmartWeek(40)" class="smart-week-btn p-2.5 rounded-xl border border-slate-200 bg-white hover:border-pink-300 text-left transition active:scale-95 cursor-pointer" data-week="40">
+                                    <span class="block text-xs font-bold text-slate-800">40 Minggu</span>
+                                    <span class="block text-[10px] text-rose-600 font-bold">Hari HPL Lahir</span>
+                                </button>
+                            </div>
+
+                            <div class="flex items-center gap-3 pt-2">
+                                <label for="smart-custom-week-input" class="text-xs font-bold text-slate-600 shrink-0">Atau pilih minggu kustom:</label>
+                                <input type="number" id="smart-custom-week-input" min="4" max="42" placeholder="Minggu (4 - 42)" oninput="calcSmartCustomWeek(this.value)" class="w-32 p-2 rounded-xl border border-pink-200 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-pink-400">
+                            </div>
+                        </div>
+
+                        <!-- Result Card for Milestone Finder -->
+                        <div id="smart-milestone-result-card" class="bg-gradient-to-br from-white via-purple-50/30 to-white p-4 sm:p-5 rounded-2xl border border-purple-100 shadow-sm space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-purple-100/80 pb-3">
+                                <div>
+                                    <span class="text-[10px] font-bold text-purple-600 uppercase tracking-wider block" data-i18n="smartDateResultLabel">Jatuh pada Tanggal:</span>
+                                    <h4 id="smart-find-date-str" class="text-lg sm:text-xl font-extrabold text-slate-800">-</h4>
+                                </div>
+                                <div id="smart-find-countdown-badge" class="px-3 py-1 bg-purple-100 text-purple-700 font-bold text-xs rounded-xl border border-purple-200">
+                                    -
+                                </div>
+                            </div>
+
+                            <div class="bg-white/80 p-3 rounded-xl border border-white text-xs text-slate-600 leading-relaxed font-medium" id="smart-find-detail-text">
+                                Pilih minggu di atas untuk melihat tanggal pasti dan ulasan perkembangannya.
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1105,6 +1475,34 @@
         </div>
     </div>
 
+    <!-- Edit HPHT Modal -->
+    <div id="edit-hpht-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white/95 backdrop-blur-2xl rounded-[32px] w-full max-w-sm p-6 sm:p-8 shadow-2xl border border-white/60 transform scale-95 transition-transform duration-300" id="edit-hpht-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <div class="bg-pink-100 text-pink-500 w-8 h-8 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-calendar-alt text-sm"></i>
+                    </div>
+                    <span data-i18n="estEditModalTitle">Perbarui Tanggal HPHT</span>
+                </h2>
+                <button onclick="closeEditHphtModal()" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition active:scale-95"><i class="fas fa-times text-sm"></i></button>
+            </div>
+            
+            <p class="text-xs text-slate-500 mb-4 leading-relaxed font-medium" data-i18n="estEditModalDesc">Pilih tanggal baru Hari Pertama Haid Terakhir untuk menghitung ulang semua estimasi kehamilan Bunda.</p>
+            
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider" data-i18n="hphtLabel">Tanggal HPHT</label>
+                    <input type="date" id="modal-hpht-input" class="w-full p-3.5 rounded-xl border border-pink-200 focus:ring-2 focus:ring-pink-500 outline-none bg-white text-slate-800 font-medium text-sm">
+                </div>
+                <div class="flex gap-2.5 pt-2">
+                    <button type="button" onclick="closeEditHphtModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition" data-i18n="cancelBtn">Batal</button>
+                    <button type="button" onclick="saveUpdatedHpht()" class="flex-1 py-3 pink-gradient text-white rounded-xl font-bold text-xs shadow-md shadow-pink-200 active:scale-95 transition" data-i18n="estSaveRecalcBtn">Simpan & Hitung</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const detailedWeeks = { id: { weeks: [], symptoms: [], advices: [] }, en: { weeks: [], symptoms: [], advices: [] } };
 detailedWeeks.id.weeks = ["","","","","Seukuran Biji Poppy. Janin sedang menempel pada dinding rahim. Pembentukan tabung saraf dimulai.","Seukuran Biji Apel. Jantung bayi mulai berdetak! Tabung saraf mulai menutup.","Seukuran Kacang Polong. Cikal bakal hidung, mulut, dan telinga mulai terbentuk.","Seukuran Blueberry. Kepala bayi lebih besar dibanding tubuhnya. Tunas lengan dan kaki mulai tumbuh.","Seukuran Raspberry. Bibir atas dan hidung terbentuk. Jantung berdetak cepat 150-170 bpm.","Seukuran Buah Zaitun. Mata bayi telah terbentuk, otot mulai merespons pergerakan kecil.","Seukuran Stroberi. Tulang rawan mulai terbentuk menjadi tulang keras. Ginjal memproduksi urine.","Seukuran Jeruk Nipis. Bayi mulai mengepalkan tangan dan jari kaki sudah terpisah dari selaputnya.","Seukuran Buah Plum. Organ utama sudah terbentuk lengkap. Refleks mengisap mulai muncul.","Seukuran Lemon. Bayi mulai bergerak perlahan meskipun Bunda belum bisa merasakannya.","Seukuran Buah Persik. Bayi mulai berlatih otot wajahnya dengan mengerutkan kening atau menyipitkan mata.","Seukuran Apel. Bayi dapat merasakan cahaya dari luar rahim. Kulit masih sangat tipis.","Seukuran Alpukat. Sistem peredaran darah dan saluran kemih mulai berfungsi sepenuhnya.","Seukuran Bawang Bombay. Tulang bayi menyerap kalsium untuk semakin kuat. Bayi merespons suara.","Seukuran Ubi Jalar. Telimga sudah berada di posisi yang sempurna. Tali pusar semakin tebal.","Seukuran Mangga. Vernix caseosa (lapisan putih penutup kulit) mulai menyelimuti bayi untuk melindunginya.","Seukuran Pisang. Bunda mungkin merasakan tendangan lembut (quickening). Bayi mulai menelan cairan ketuban.","Seukuran Wortel. Alis dan kelopak mata bayi terbentuk penuh. Sumsum tulang mulai memproduksi darah.","Seukuran Pepaya Kecil. Indera perasa berkembang, bayi bisa mengecap rasa makan Bunda dari cairan ketuban.","Seukuran Terong Besar. Paru-paru bayi mulai memproduksi surfaktan untuk persiapan bernapas.","Seukuran Jagung. Otak bayi berkembang pesat. Bayi mengatur posisi yang nyaman.","Seukuran Kembang Kol. Bayi mulai bertumbuh menjadi gempal (lemak mulai terkumpul).","Seukuran Timun Jepang. Mata bayi merespons kedipan. Denyut jantung bayi menurun sedikit seiring pertumbuhan tubuh.","Seukuran Kubis Hijau. Pola tidur dan bangun bayi mulai makin teratur dan panjang.","Seukuran Terong Ungu Besar. Bulu halus (lanugo) yang menutupi kulit bayi perlahan mulai rontok.","Seukuran Labu Acorn. Otonomi tubuh makin baik mengatur suhu, bersiap lahir.","Seukuran Kubis Besar. Kuku bayi sudah terbentuk sempurna di jari tangan dan kaki.","Seukuran Kelapa. Bayi bisa menyerap zat besi, kalsium, dan fosfor dari Bunda untuk perkuatan akhir.","Seukuran Bengkuang. Sebagian besar kerangka janin mengeras, walau tulang kepala masih lunak agar mudah saat lahir.","Seukuran Nanas Besar. Ketuban berada pada volume terbesarnya.","Seukuran Melon Blewah. Antibodi Bunda ditransfer ke bayi untuk memberikan kekebalan awal pasca lahir.","Seukuran Buah Melon. Ginjal dan hati bayi sudah matang sepenuhnya.","Seukuran Sawi Hijau Panjang. Kepala bayi mulai turun ke panggul Bunda (engaging).","Seukuran Semangka Kecil. Paru-paru bayi kini sudah matang. Bayi mempraktikkan bernapas.","Seukuran Labu Musim Dingin. Pegangan bayi semakin erat.","Seukuran Nangka Kecil. Bayi dipenuhi lapisan lemak siap menjaga panas tubuh saat lahir.","Seukuran Buah Labu. Bayi sudah cukup umur! Selamat menanti kehadiran si buah hati."];
@@ -1306,7 +1704,63 @@ detailedWeeks.en.advices = ["","","","","Start taking your folic acid routinely 
                 aiBtnGemini: "Tanya Gemini",
                 aiBtnGoogle: "Cari di Google",
                 aiLoading: "Mengetik jawaban...",
-                aiError: "Maaf, gagal mendapatkan jawaban dari AI. Coba lagi atau gunakan Google."
+                aiError: "Maaf, gagal mendapatkan jawaban dari AI. Coba lagi atau gunakan Google.",
+
+                // Estimation & Smart Filter
+                setupHphtTip: "💡 <b>Panduan HPHT:</b> Masukkan tanggal hari <i>pertama</i> darah haid terakhir keluar (bukan saat haid selesai). Jika siklus haid tidak teratur, estimasi dapat dicocokkan kembali dengan hasil USG dokter.",
+                estPregnancyTitle: "Informasi Estimasi Kehamilan",
+                estPregnancySubtitle: "Metode Obstetri Medis & Rincian Tahapan",
+                estEditHphtBtn: "Ubah HPHT",
+                estFullTermTitle: "Jendela Lahir Cukup Bulan",
+                estFullTermSub: "Minggu 37 - 42 (Masa Persalinan Wajar)",
+                estFullTermNote: "80-90% bayi lahir sehat pada rentang minggu 37-41, bukan tepat di hari HPL.",
+                estEmbryoTitle: "Usia Embrio/Janin Asli",
+                estEmbryoSub: "Dihitung sejak pembuahan (~14 hari setelah HPHT)",
+                estZodiacTitle: "Estimasi Zodiak Bayi:",
+                estDaysProgressTitle: "Perjalanan Hari Kehamilan",
+                estMaturityTitle: "Klasifikasi Kematangan",
+                estTrimesterTimelineTitle: "Estimasi Periode Trimester",
+                estTri1Sub: "Organogenesis & Detak Jantung",
+                estTri2Sub: "Pertumbuhan Pesat & Gerak",
+                estTri3Sub: "Pematangan Paru & Persiapan Lahir",
+                estHowTitle: "Bagaimana Estimasi Kehamilan Dihitung?",
+                estHowDesc1: "<b>1. Rumus Naegele (Standar Medis Obstetri):</b> Kehamilan dihitung dari Hari Pertama Haid Terakhir (HPHT) dengan durasi rata-rata 280 hari (40 minggu / 9 bulan 10 hari).",
+                estHowDesc2: "<b>2. Usia Janin vs Usia Kehamilan:</b> Usia kehamilan dihitung sejak HPHT, sedangkan pembuahan baru terjadi sekitar 2 minggu kemudian. Oleh karena itu, usia janin asli sekitar 2 minggu lebih muda daripada usia kehamilan medis.",
+                estHowDesc3: "<b>3. Akurasi USG Trimester 1:</b> Jika Bunda memiliki siklus haid tidak teratur, hasil USG trimester pertama (pengukuran CRL) adalah penentu usia kehamilan paling presisi. Bunda dapat menyesuaikan tanggal HPHT di aplikasi ini.",
+                estEditModalTitle: "Perbarui Tanggal HPHT",
+                estEditModalDesc: "Pilih tanggal baru Hari Pertama Haid Terakhir untuk menghitung ulang semua estimasi kehamilan Bunda.",
+                estSaveRecalcBtn: "Simpan & Hitung",
+                estPreterm: "Preterm (Prematur)",
+                estEarlyTerm: "Early Term (Cukup Bulan Awal)",
+                estFullTerm: "Full Term (Cukup Bulan Penuh)",
+                estLateTerm: "Late Term (Cukup Bulan Lanjut)",
+                estPostTerm: "Post-term (Lewat Bulan)",
+                estActiveTri: "Sedang Dijalani",
+                estCompletedTri: "Selesai",
+                estUpcomingTri: "Akan Datang",
+                
+                // Smart Filter Keys
+                smartFilterTitle: "Filter Pintar Estimasi Tanggal",
+                smartFilterSubtitle: "Simulasi & cek usia janin di tanggal tertentu (misal: 2 September) atau cari tanggal target",
+                smartTabTargetDate: "Cek Tanggal Pilihan",
+                smartTabFindDate: "Cari Tanggal Usia",
+                smartDateInputLabel: "Pilih Tanggal Target yang Ingin Dicek:",
+                smartBtnCheck: "Hitung Estimasi",
+                smartDatePresetsLabel: "Pintasan Cepat:",
+                smartPresetToday: "Hari Ini",
+                smartResultTargetDateLabel: "Estimasi di Tanggal:",
+                smartAgeAtDateLabel: "Usia Kandungan",
+                smartTrimesterLabel: "Trimester & Fase",
+                smartPregProgressLabel: "Progres Kehamilan",
+                smartBabySizeAtDateLabel: "Ukuran & Kondisi Janin",
+                smartMilestoneAgendaLabel: "Agenda & Saran Medis",
+                smartSelectWeekLabel: "Pilih Target Usia Kandungan yang Ingin Dicari Tanggalnya:",
+                smartDateResultLabel: "Jatuh pada Tanggal:",
+                smartBeforeHphtWarn: "Tanggal yang dipilih sebelum HPHT ({d}). Belum terjadi kehamilan pada tanggal ini.",
+                smartAfterTermWarn: "Tanggal ini sudah melewati 42 minggu kehamilan (masa pasca melahirkan).",
+                smartDaysPassed: "{d} hari yang lalu",
+                smartDaysAhead: "{d} hari lagi ke depan",
+                smartDaysToday: "Hari ini!"
             },
             en: {
                 headerSubtitle: "care made easy.",
@@ -1499,7 +1953,63 @@ detailedWeeks.en.advices = ["","","","","Start taking your folic acid routinely 
                 aiBtnGemini: "Ask Gemini",
                 aiBtnGoogle: "Search Google",
                 aiLoading: "Typing answer...",
-                aiError: "Sorry, failed to get an answer from AI. Please try again or use Google."
+                aiError: "Sorry, failed to get an answer from AI. Please try again or use Google.",
+
+                // Estimation & Smart Filter
+                setupHphtTip: "💡 <b>LMP Guide:</b> Enter the <i>first</i> day of your last menstrual period (not when it ended). If your cycle is irregular, estimates can be adjusted with your doctor's ultrasound scan.",
+                estPregnancyTitle: "Pregnancy Estimation Details",
+                estPregnancySubtitle: "Obstetric Method & Stage Breakdown",
+                estEditHphtBtn: "Edit LMP",
+                estFullTermTitle: "Full-Term Delivery Window",
+                estFullTermSub: "Weeks 37 - 42 (Natural Delivery Range)",
+                estFullTermNote: "80-90% of healthy babies are born between weeks 37-41, rather than exactly on the due date.",
+                estEmbryoTitle: "True Fetal (Embryonic) Age",
+                estEmbryoSub: "Calculated from fertilization (~14 days after LMP)",
+                estZodiacTitle: "Est. Baby Zodiac:",
+                estDaysProgressTitle: "Pregnancy Day Counter",
+                estMaturityTitle: "Maturity Classification",
+                estTrimesterTimelineTitle: "Trimester Timeline Estimates",
+                estTri1Sub: "Organogenesis & Heartbeat",
+                estTri2Sub: "Rapid Growth & Movements",
+                estTri3Sub: "Lung Maturation & Birth Prep",
+                estHowTitle: "How Is Pregnancy Estimated?",
+                estHowDesc1: "<b>1. Naegele's Rule (Obstetric Standard):</b> Pregnancy is measured from the first day of your Last Menstrual Period (LMP) with an average duration of 280 days (40 weeks).",
+                estHowDesc2: "<b>2. Fetal Age vs Gestational Age:</b> Medical gestational age starts on LMP, whereas conception occurs ~2 weeks later during ovulation. Hence, the true embryo age is roughly 2 weeks younger.",
+                estHowDesc3: "<b>3. 1st Trimester Ultrasound Accuracy:</b> For irregular cycles, a 1st trimester ultrasound (CRL measurement) provides the most precise gestational dating. You can update your LMP date in this app to match your ultrasound report.",
+                estEditModalTitle: "Update LMP Date",
+                estEditModalDesc: "Choose a new Last Menstrual Period date to recalculate all your pregnancy milestones.",
+                estSaveRecalcBtn: "Save & Recalculate",
+                estPreterm: "Preterm",
+                estEarlyTerm: "Early Term",
+                estFullTerm: "Full Term",
+                estLateTerm: "Late Term",
+                estPostTerm: "Post-term",
+                estActiveTri: "Active",
+                estCompletedTri: "Completed",
+                estUpcomingTri: "Upcoming",
+                
+                // Smart Filter Keys
+                smartFilterTitle: "Smart Date Pregnancy Filter",
+                smartFilterSubtitle: "Simulate & check fetal age on any target date (e.g. September 2) or find milestone dates",
+                smartTabTargetDate: "Check Target Date",
+                smartTabFindDate: "Find Milestone Date",
+                smartDateInputLabel: "Select Target Date to Check:",
+                smartBtnCheck: "Calculate",
+                smartDatePresetsLabel: "Quick Presets:",
+                smartPresetToday: "Today",
+                smartResultTargetDateLabel: "Estimation on Date:",
+                smartAgeAtDateLabel: "Gestational Age",
+                smartTrimesterLabel: "Trimester & Phase",
+                smartPregProgressLabel: "Pregnancy Progress",
+                smartBabySizeAtDateLabel: "Fetal Size & Condition",
+                smartMilestoneAgendaLabel: "Medical Agenda & Advice",
+                smartSelectWeekLabel: "Select Gestational Week to Find Calendar Date:",
+                smartDateResultLabel: "Calendar Date:",
+                smartBeforeHphtWarn: "Selected date is before LMP ({d}). Pregnancy has not yet started on this date.",
+                smartAfterTermWarn: "This date is beyond 42 weeks of pregnancy (postpartum period).",
+                smartDaysPassed: "{d} days ago",
+                smartDaysAhead: "in {d} days",
+                smartDaysToday: "Today!"
             }
         };
 
@@ -2099,6 +2609,8 @@ detailedWeeks.en.advices = ["","","","","Start taking your folic acid routinely 
             renderGrowthChart(weeks, hpht);
             renderMilestones(hpht);
             renderTips();
+            updateEstimationDetails(hpht, weeks, days, diffDays, edd);
+            initSmartFilter(hpht);
 
             document.getElementById('setup-view').classList.add('hidden');
             document.getElementById('info-view').classList.remove('hidden');
@@ -2139,6 +2651,525 @@ detailedWeeks.en.advices = ["","","","","Start taking your folic acid routinely 
             const options = { day: 'numeric', month: 'long', year: 'numeric' };
             const locale = currentLang === 'en' ? 'en-US' : 'id-ID';
             return date.toLocaleDateString(locale, options);
+        }
+
+        // --- INFORMASI ESTIMASI KEHAMILAN & SMART FILTER LOGIC ---
+
+        function getZodiacSign(date) {
+            const d = date.getDate();
+            const m = date.getMonth() + 1;
+            if ((m === 3 && d >= 21) || (m === 4 && d <= 19)) return "♈ Aries";
+            if ((m === 4 && d >= 20) || (m === 5 && d <= 20)) return "♉ Taurus";
+            if ((m === 5 && d >= 21) || (m === 6 && d <= 20)) return "♊ Gemini";
+            if ((m === 6 && d >= 21) || (m === 7 && d <= 22)) return "♋ Cancer";
+            if ((m === 7 && d >= 23) || (m === 8 && d <= 22)) return "♌ Leo";
+            if ((m === 8 && d >= 23) || (m === 9 && d <= 22)) return "♍ Virgo";
+            if ((m === 9 && d >= 23) || (m === 10 && d <= 22)) return "♎ Libra";
+            if ((m === 10 && d >= 23) || (m === 11 && d <= 21)) return "♏ Scorpio";
+            if ((m === 11 && d >= 22) || (m === 12 && d <= 21)) return currentLang === 'en' ? "♐ Sagittarius" : "♐ Sagitarius";
+            if ((m === 12 && d >= 22) || (m === 1 && d <= 19)) return currentLang === 'en' ? "♑ Capricorn" : "♑ Kaprikornus";
+            if ((m === 1 && d >= 20) || (m === 2 && d <= 18)) return "♒ Aquarius";
+            return "♓ Pisces";
+        }
+
+        function updateEstimationDetails(hpht, weeks, days, diffDays, edd) {
+            const dict = i18n[currentLang];
+            if (!hpht) return;
+
+            // HPHT Summary in header
+            const hphtSummaryEl = document.getElementById('est-hpht-summary');
+            if (hphtSummaryEl) hphtSummaryEl.innerText = formatShortDate(hpht);
+
+            // Full-Term Window (Week 37 - 42)
+            const fullTermStart = new Date(hpht);
+            fullTermStart.setDate(fullTermStart.getDate() + (37 * 7));
+            const fullTermEnd = new Date(hpht);
+            fullTermEnd.setDate(fullTermEnd.getDate() + (42 * 7));
+            const fullTermRangeEl = document.getElementById('est-full-term-range');
+            if (fullTermRangeEl) {
+                fullTermRangeEl.innerText = `${formatShortDate(fullTermStart)} - ${formatShortDate(fullTermEnd)}`;
+            }
+
+            // True Fetal / Embryonic Age (~14 days post HPHT)
+            const embryoAgeEl = document.getElementById('est-embryo-age');
+            if (embryoAgeEl) {
+                if (diffDays < 14) {
+                    embryoAgeEl.innerText = currentLang === 'en' ? '~0 Weeks (Early Conception)' : '~0 Minggu (Awal Konsepsi)';
+                } else {
+                    const embryoDiff = diffDays - 14;
+                    const embryoWeeks = Math.floor(embryoDiff / 7);
+                    const embryoDays = embryoDiff % 7;
+                    embryoAgeEl.innerText = `${embryoWeeks} ${dict.weeksLabel} ${embryoDays} ${dict.daysLabel}`;
+                }
+            }
+
+            // Baby Zodiac estimate
+            const zodiacEl = document.getElementById('est-zodiac-info');
+            if (zodiacEl && edd) {
+                zodiacEl.innerText = `${dict.estZodiacTitle || 'Estimasi Zodiak Bayi:'} ${getZodiacSign(edd)}`;
+            }
+
+            // Days Progress Counter
+            const daysProgEl = document.getElementById('est-days-progress');
+            if (daysProgEl) {
+                daysProgEl.innerText = currentLang === 'en' 
+                    ? `Day ${Math.min(diffDays, 280)} of 280 days` 
+                    : `Hari ke-${Math.min(diffDays, 280)} dari 280 hari`;
+            }
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const remDays = Math.ceil((edd - today) / (1000 * 60 * 60 * 24));
+            const remDetailEl = document.getElementById('est-remaining-detail');
+            if (remDetailEl) {
+                if (remDays > 0) {
+                    remDetailEl.innerText = currentLang === 'en' 
+                        ? `${remDays} days left to estimated delivery date` 
+                        : `Sisa ${remDays} hari lagi menuju taksiran lahir`;
+                } else {
+                    remDetailEl.innerText = dict.timeToMeet;
+                }
+            }
+
+            // Maturity Classification
+            const maturityBadge = document.getElementById('est-maturity-badge');
+            const maturityDesc = document.getElementById('est-maturity-desc');
+            if (maturityBadge && maturityDesc) {
+                if (weeks < 37) {
+                    maturityBadge.className = 'inline-block px-2.5 py-1 rounded-full text-xs font-bold border border-amber-200 bg-amber-100 text-amber-800';
+                    maturityBadge.innerText = dict.estPreterm || 'Preterm (Prematur)';
+                    maturityDesc.innerText = currentLang === 'en' 
+                        ? 'Organs and lungs are still completing final maturation in the womb.' 
+                        : 'Organ vital dan paru-paru masih dalam tahap pematangan penting di dalam rahim.';
+                } else if (weeks < 39) {
+                    maturityBadge.className = 'inline-block px-2.5 py-1 rounded-full text-xs font-bold border border-teal-200 bg-teal-100 text-teal-800';
+                    maturityBadge.innerText = dict.estEarlyTerm || 'Early Term (Cukup Bulan Awal)';
+                    maturityDesc.innerText = currentLang === 'en' 
+                        ? 'Baby is mature and considered safe for delivery if labor begins spontaneously.' 
+                        : 'Bayi sudah matang dan aman dilahirkan tanpa risiko komplikasi prematuritas.';
+                } else if (weeks < 41) {
+                    maturityBadge.className = 'inline-block px-2.5 py-1 rounded-full text-xs font-bold border border-emerald-200 bg-emerald-100 text-emerald-800';
+                    maturityBadge.innerText = dict.estFullTerm || 'Full Term (Cukup Bulan Penuh)';
+                    maturityDesc.innerText = currentLang === 'en' 
+                        ? 'Ideal golden window for natural or scheduled delivery.' 
+                        : 'Rentang waktu emas paling ideal bagi kelahiran alami yang sehat dan matang sempurna.';
+                } else if (weeks === 41) {
+                    maturityBadge.className = 'inline-block px-2.5 py-1 rounded-full text-xs font-bold border border-blue-200 bg-blue-100 text-blue-800';
+                    maturityBadge.innerText = dict.estLateTerm || 'Late Term (Cukup Bulan Lanjut)';
+                    maturityDesc.innerText = currentLang === 'en' 
+                        ? 'Monitor amniotic fluid volume and fetal movements closely with your doctor.' 
+                        : 'Pantau ketat volume air ketuban dan frekuensi gerakan janin bersama dokter.';
+                } else {
+                    maturityBadge.className = 'inline-block px-2.5 py-1 rounded-full text-xs font-bold border border-rose-200 bg-rose-100 text-rose-800';
+                    maturityBadge.innerText = dict.estPostTerm || 'Post-term (Lewat Bulan)';
+                    maturityDesc.innerText = currentLang === 'en' 
+                        ? 'Consult your obstetrician regarding immediate labor induction.' 
+                        : 'Konsultasi segera dengan dokter kandungan mengenai tindakan induksi persalinan.';
+                }
+            }
+
+            // Trimester Timeline Card Ranges
+            const tri1End = new Date(hpht);
+            tri1End.setDate(tri1End.getDate() + (13 * 7));
+            const tri2Start = new Date(tri1End);
+            tri2Start.setDate(tri2Start.getDate() + 1);
+            const tri2End = new Date(hpht);
+            tri2End.setDate(tri2End.getDate() + (28 * 7));
+            const tri3Start = new Date(tri2End);
+            tri3Start.setDate(tri3Start.getDate() + 1);
+
+            const tri1DatesEl = document.getElementById('est-tri1-dates');
+            const tri2DatesEl = document.getElementById('est-tri2-dates');
+            const tri3DatesEl = document.getElementById('est-tri3-dates');
+            if (tri1DatesEl) tri1DatesEl.innerText = `${formatShortDate(hpht)} - ${formatShortDate(tri1End)}`;
+            if (tri2DatesEl) tri2DatesEl.innerText = `${formatShortDate(tri2Start)} - ${formatShortDate(tri2End)}`;
+            if (tri3DatesEl) tri3DatesEl.innerText = `${formatShortDate(tri3Start)} - ${formatShortDate(edd)}`;
+
+            // Trimester Timeline Badges & Highlight
+            const tri1Stat = document.getElementById('est-tri1-status');
+            const tri2Stat = document.getElementById('est-tri2-status');
+            const tri3Stat = document.getElementById('est-tri3-status');
+            const tri1Card = document.getElementById('est-tri1-card');
+            const tri2Card = document.getElementById('est-tri2-card');
+            const tri3Card = document.getElementById('est-tri3-card');
+
+            const setCardActive = (card, badge) => {
+                if (card) {
+                    card.className = 'bg-white/95 p-3 sm:p-4 rounded-2xl border-2 border-pink-400 shadow-sm relative transition-all';
+                }
+                if (badge) {
+                    badge.className = 'text-[9px] font-bold px-2 py-0.5 rounded-full bg-pink-500 text-white';
+                    badge.innerText = dict.estActiveTri || 'Sedang Dijalani';
+                }
+            };
+
+            const setCardDone = (card, badge) => {
+                if (card) {
+                    card.className = 'bg-white/60 p-3 sm:p-4 rounded-2xl border border-white shadow-2xs relative transition-all opacity-85';
+                }
+                if (badge) {
+                    badge.className = 'text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700';
+                    badge.innerText = dict.estCompletedTri || 'Selesai';
+                }
+            };
+
+            const setCardUpcoming = (card, badge) => {
+                if (card) {
+                    card.className = 'bg-white/60 p-3 sm:p-4 rounded-2xl border border-white shadow-2xs relative transition-all opacity-70';
+                }
+                if (badge) {
+                    badge.className = 'text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500';
+                    badge.innerText = dict.estUpcomingTri || 'Akan Datang';
+                }
+            };
+
+            if (weeks < 13) {
+                setCardActive(tri1Card, tri1Stat);
+                setCardUpcoming(tri2Card, tri2Stat);
+                setCardUpcoming(tri3Card, tri3Stat);
+            } else if (weeks < 28) {
+                setCardDone(tri1Card, tri1Stat);
+                setCardActive(tri2Card, tri2Stat);
+                setCardUpcoming(tri3Card, tri3Stat);
+            } else {
+                setCardDone(tri1Card, tri1Stat);
+                setCardDone(tri2Card, tri2Stat);
+                setCardActive(tri3Card, tri3Stat);
+            }
+        }
+
+        function toggleEstExplanation() {
+            const box = document.getElementById('est-explanation-box');
+            const icon = document.getElementById('icon-toggle-est-exp');
+            if (!box) return;
+            box.classList.toggle('hidden');
+            if (box.classList.contains('hidden')) {
+                icon.classList.remove('rotate-180');
+            } else {
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        function openEditHphtModal() {
+            const saved = localStorage.getItem('bunda_care_hpht') || document.getElementById('hpht-input').value;
+            if (saved) {
+                document.getElementById('modal-hpht-input').value = saved;
+            }
+            const modal = document.getElementById('edit-hpht-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('edit-hpht-content').classList.remove('scale-95');
+            document.getElementById('edit-hpht-content').classList.add('scale-100');
+        }
+
+        function closeEditHphtModal() {
+            const modal = document.getElementById('edit-hpht-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('edit-hpht-content').classList.add('scale-95');
+            document.getElementById('edit-hpht-content').classList.remove('scale-100');
+        }
+
+        function saveUpdatedHpht() {
+            const newVal = document.getElementById('modal-hpht-input').value;
+            if (!newVal) {
+                showToast(i18n[currentLang].toastSelectHpht, "warning");
+                return;
+            }
+            document.getElementById('hpht-input').value = newVal;
+            closeEditHphtModal();
+            calculatePregnancy(true);
+        }
+
+        // --- SMART DATE FILTER ENGINE ---
+
+        function initSmartFilter(hpht) {
+            const targetInput = document.getElementById('smart-target-date-input');
+            if (!targetInput) return;
+
+            // Default target: if empty, set to today or 14 days ahead
+            if (!targetInput.value) {
+                const defDate = new Date();
+                defDate.setDate(defDate.getDate() + 14);
+                const yyyy = defDate.getFullYear();
+                const mm = String(defDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(defDate.getDate()).padStart(2, '0');
+                targetInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+
+            calcSmartTargetDate();
+            selectSmartWeek(28); // Default milestone tab
+        }
+
+        function switchSmartTab(tab) {
+            const targetPanel = document.getElementById('smart-panel-target-date');
+            const milestonePanel = document.getElementById('smart-panel-find-milestone');
+            const btnTarget = document.getElementById('tab-btn-target-date');
+            const btnMilestone = document.getElementById('tab-btn-find-milestone');
+
+            if (tab === 'target-date') {
+                targetPanel.classList.remove('hidden');
+                milestonePanel.classList.add('hidden');
+                btnTarget.className = 'px-3.5 py-1.5 rounded-xl transition-all shadow-xs bg-white text-pink-600 cursor-pointer';
+                btnMilestone.className = 'px-3.5 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 cursor-pointer';
+            } else {
+                targetPanel.classList.add('hidden');
+                milestonePanel.classList.remove('hidden');
+                btnTarget.className = 'px-3.5 py-1.5 rounded-xl transition-all text-slate-500 hover:text-slate-800 cursor-pointer';
+                btnMilestone.className = 'px-3.5 py-1.5 rounded-xl transition-all shadow-xs bg-white text-purple-600 cursor-pointer';
+            }
+        }
+
+        function setSmartPreset(preset) {
+            const hphtVal = document.getElementById('hpht-input').value;
+            const targetInput = document.getElementById('smart-target-date-input');
+            if (!targetInput) return;
+
+            let target = new Date();
+
+            if (preset === 'today') {
+                target = new Date();
+            } else if (preset === 'plus2w') {
+                target = new Date();
+                target.setDate(target.getDate() + 14);
+            } else if (preset === 'plus1m') {
+                target = new Date();
+                target.setDate(target.getDate() + 30);
+            } else if (preset === 'plus2m') {
+                target = new Date();
+                target.setDate(target.getDate() + 60);
+            } else if (preset === 'sep2') {
+                // Specifically calculate September 2 for this pregnancy cycle
+                let targetYear = new Date().getFullYear();
+                if (hphtVal) {
+                    const hphtDate = new Date(hphtVal);
+                    const cand = new Date(hphtDate.getFullYear(), 8, 2); // 8 is September
+                    if (cand < hphtDate) {
+                        targetYear = hphtDate.getFullYear() + 1;
+                    } else {
+                        targetYear = hphtDate.getFullYear();
+                    }
+                }
+                target = new Date(targetYear, 8, 2);
+            } else if (preset === 'tm3') {
+                if (hphtVal) {
+                    target = new Date(hphtVal);
+                    target.setDate(target.getDate() + (28 * 7));
+                }
+            } else if (preset === 'fullterm') {
+                if (hphtVal) {
+                    target = new Date(hphtVal);
+                    target.setDate(target.getDate() + (37 * 7));
+                }
+            } else if (preset === 'edd') {
+                if (hphtVal) {
+                    target = new Date(hphtVal);
+                    target.setDate(target.getDate() + 280);
+                }
+            }
+
+            const yyyy = target.getFullYear();
+            const mm = String(target.getMonth() + 1).padStart(2, '0');
+            const dd = String(target.getDate()).padStart(2, '0');
+            targetInput.value = `${yyyy}-${mm}-${dd}`;
+
+            calcSmartTargetDate();
+        }
+
+        function calcSmartTargetDate() {
+            const input = document.getElementById('smart-target-date-input');
+            const hphtVal = document.getElementById('hpht-input').value;
+            const dict = i18n[currentLang];
+
+            if (!input || !input.value) return;
+            if (!hphtVal) return;
+
+            const parts = input.value.split('-');
+            if (parts.length !== 3) return;
+            const targetDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            targetDate.setHours(0,0,0,0);
+
+            const hpht = new Date(hphtVal);
+            hpht.setHours(0,0,0,0);
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            // Locale formatted strings
+            const locale = currentLang === 'en' ? 'en-US' : 'id-ID';
+            const dayOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const dateFormatted = targetDate.toLocaleDateString(locale, dayOptions);
+            const dayNameOnly = targetDate.toLocaleDateString(locale, { weekday: 'long' });
+
+            const dayBadge = document.getElementById('smart-target-dayname');
+            if (dayBadge) {
+                dayBadge.innerText = currentLang === 'en' ? dayNameOnly : `Hari ${dayNameOnly}`;
+            }
+
+            document.getElementById('smart-res-date-str').innerText = dateFormatted;
+
+            // Distance from today
+            const diffFromTodayDays = Math.round((targetDate - today) / (1000 * 60 * 60 * 24));
+            const badgeEl = document.getElementById('smart-res-distance-badge');
+            if (badgeEl) {
+                if (diffFromTodayDays === 0) {
+                    badgeEl.className = 'px-3 py-1 bg-pink-100 text-pink-700 font-bold text-xs rounded-xl border border-pink-200';
+                    badgeEl.innerText = dict.smartDaysToday || "Hari ini!";
+                } else if (diffFromTodayDays > 0) {
+                    badgeEl.className = 'px-3 py-1 bg-purple-100 text-purple-700 font-bold text-xs rounded-xl border border-purple-200';
+                    badgeEl.innerText = (dict.smartDaysAhead || "in {d} days").replace('{d}', diffFromTodayDays);
+                } else {
+                    badgeEl.className = 'px-3 py-1 bg-slate-100 text-slate-600 font-bold text-xs rounded-xl border border-slate-200';
+                    badgeEl.innerText = (dict.smartDaysPassed || "{d} days ago").replace('{d}', Math.abs(diffFromTodayDays));
+                }
+            }
+
+            // Difference from HPHT
+            const diffFromHphtDays = Math.floor((targetDate - hpht) / (1000 * 60 * 60 * 24));
+
+            if (diffFromHphtDays < 0) {
+                // Before HPHT
+                document.getElementById('smart-res-age').innerText = currentLang === 'en' ? 'Before LMP' : 'Sebelum HPHT';
+                document.getElementById('smart-res-months').innerText = (dict.smartBeforeHphtWarn || '').replace('{d}', formatShortDate(hpht));
+                document.getElementById('smart-res-trimester').innerText = '-';
+                document.getElementById('smart-res-trimester-sub').innerText = currentLang === 'en' ? 'Pregnancy not started yet' : 'Kehamilan belum dimulai';
+                document.getElementById('smart-res-day-progress').innerText = '0 / 280';
+                document.getElementById('smart-res-progress-bar').style.width = '0%';
+                document.getElementById('smart-res-baby-size').innerText = currentLang === 'en' ? 'Pre-conception stage' : 'Tahap Pra-Konsepsi';
+                document.getElementById('smart-res-baby-desc').innerText = currentLang === 'en' ? 'This date precedes your last menstrual cycle.' : 'Tanggal ini mendahului siklus menstruasi terakhir Bunda.';
+                document.getElementById('smart-res-medical-title').innerText = currentLang === 'en' ? 'Preconception health' : 'Persiapan Pra-Nikah / Pra-Hamil';
+                document.getElementById('smart-res-medical-desc').innerText = currentLang === 'en' ? 'Take 400mcg folic acid daily when preparing for pregnancy.' : 'Konsumsi asam folat 400mcg rutin saat mempersiapkan kehamilan.';
+                return;
+            }
+
+            const targetWeeks = Math.floor(diffFromHphtDays / 7);
+            const targetDays = diffFromHphtDays % 7;
+            const targetMonths = (diffFromHphtDays / 30.44).toFixed(1);
+
+            document.getElementById('smart-res-age').innerText = `${targetWeeks} ${dict.weeksLabel} ${targetDays} ${dict.daysLabel}`;
+            document.getElementById('smart-res-months').innerText = dict.aroundMonthsLabel.replace('{m}', targetMonths);
+
+            // Trimester calculation
+            let triName = dict.tri1Title;
+            let triSub = dict.estTri1Sub || "Organogenesis & Detak Jantung";
+            if (targetWeeks >= 13 && targetWeeks < 28) {
+                triName = dict.tri2Title;
+                triSub = dict.estTri2Sub || "Pertumbuhan Pesat & Gerak";
+            } else if (targetWeeks >= 28) {
+                triName = dict.tri3Title;
+                triSub = dict.estTri3Sub || "Pematangan Paru & Persiapan Lahir";
+            }
+            document.getElementById('smart-res-trimester').innerText = triName;
+            document.getElementById('smart-res-trimester-sub').innerText = triSub;
+
+            // Progress bar
+            const progressPercent = Math.min(100, Math.max(0, (diffFromHphtDays / 280) * 100));
+            document.getElementById('smart-res-day-progress').innerText = currentLang === 'en' 
+                ? `Day ${Math.min(diffFromHphtDays, 280)} of 280 (${progressPercent.toFixed(1)}%)`
+                : `Hari ke-${Math.min(diffFromHphtDays, 280)} dari 280 (${progressPercent.toFixed(1)}%)`;
+            document.getElementById('smart-res-progress-bar').style.width = `${progressPercent}%`;
+
+            // Baby size & development lookup
+            let safeWeek = targetWeeks;
+            if (safeWeek < 4) safeWeek = 4;
+            if (safeWeek > 40) safeWeek = 40;
+
+            const weekData = detailedWeeks[currentLang]?.weeks?.[safeWeek] || '';
+            if (weekData) {
+                const parts = weekData.split('. ');
+                document.getElementById('smart-res-baby-size').innerText = parts[0] || `Minggu ke-${targetWeeks}`;
+                document.getElementById('smart-res-baby-desc').innerText = parts.slice(1).join('. ') || weekData;
+            } else {
+                document.getElementById('smart-res-baby-size').innerText = `Minggu ke-${targetWeeks}`;
+                document.getElementById('smart-res-baby-desc').innerText = `Perkembangan janin memasuki minggu ke-${targetWeeks}.`;
+            }
+
+            // Medical agenda / recommendations
+            const adviceData = detailedWeeks[currentLang]?.advices?.[safeWeek] || '';
+            let medTitle = currentLang === 'en' ? "Routine Prenatal Care" : "Pemeriksaan Rutin";
+            if (targetWeeks <= 12) {
+                medTitle = currentLang === 'en' ? "Trimester 1: Early Ultrasound & Labs" : "Trimester 1: USG Awal & Tes Laboratorium";
+            } else if (targetWeeks >= 18 && targetWeeks <= 22) {
+                medTitle = currentLang === 'en' ? "Anomaly Scan (Detailed Anatomy USG)" : "USG Skrining Anatomi Lengkap (USG Feto)";
+            } else if (targetWeeks >= 24 && targetWeeks <= 28) {
+                medTitle = currentLang === 'en' ? "Gestational Diabetes & Hemoglobin Screen" : "Skrining Diabetes Gestasional & Cek Hb";
+            } else if (targetWeeks >= 32 && targetWeeks <= 36) {
+                medTitle = currentLang === 'en' ? "Fetal Position & Growth Monitoring" : "Evaluasi Letak Kepala Janin & Berat Janin";
+            } else if (targetWeeks >= 37) {
+                medTitle = currentLang === 'en' ? "Full-Term! Delivery Prep & CTG" : "Cukup Bulan! Siaga Persalinan & Kardiotokografi";
+            }
+            document.getElementById('smart-res-medical-title').innerText = medTitle;
+            document.getElementById('smart-res-medical-desc').innerText = adviceData || (currentLang === 'en' ? 'Keep consulting with your healthcare provider regularly.' : 'Tetap jaga asupan nutrisi dan jadwalkan kontrol teratur.');
+        }
+
+        function selectSmartWeek(week) {
+            const hphtVal = document.getElementById('hpht-input').value;
+            if (!hphtVal) return;
+            const hpht = new Date(hphtVal);
+            hpht.setHours(0,0,0,0);
+
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            const targetDate = new Date(hpht);
+            targetDate.setDate(targetDate.getDate() + (week * 7));
+
+            const dayOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const locale = currentLang === 'en' ? 'en-US' : 'id-ID';
+            const dateFormatted = targetDate.toLocaleDateString(locale, dayOptions);
+
+            const dateStrEl = document.getElementById('smart-find-date-str');
+            if (dateStrEl) dateStrEl.innerText = dateFormatted;
+
+            const diffDays = Math.round((targetDate - today) / (1000 * 60 * 60 * 24));
+            const badgeEl = document.getElementById('smart-find-countdown-badge');
+            const dict = i18n[currentLang];
+
+            if (badgeEl) {
+                if (diffDays === 0) {
+                    badgeEl.className = 'px-3 py-1 bg-pink-100 text-pink-700 font-bold text-xs rounded-xl border border-pink-200';
+                    badgeEl.innerText = dict.smartDaysToday || "Hari ini!";
+                } else if (diffDays > 0) {
+                    badgeEl.className = 'px-3 py-1 bg-purple-100 text-purple-700 font-bold text-xs rounded-xl border border-purple-200';
+                    badgeEl.innerText = (dict.smartDaysAhead || "in {d} days").replace('{d}', diffDays);
+                } else {
+                    badgeEl.className = 'px-3 py-1 bg-slate-100 text-slate-600 font-bold text-xs rounded-xl border border-slate-200';
+                    badgeEl.innerText = (dict.smartDaysPassed || "{d} days ago").replace('{d}', Math.abs(diffDays));
+                }
+            }
+
+            let safeWeek = week;
+            if (safeWeek < 4) safeWeek = 4;
+            if (safeWeek > 40) safeWeek = 40;
+            const weekData = detailedWeeks[currentLang]?.weeks?.[safeWeek] || '';
+            const advice = detailedWeeks[currentLang]?.advices?.[safeWeek] || '';
+
+            const detailEl = document.getElementById('smart-find-detail-text');
+            if (detailEl) {
+                detailEl.innerHTML = `
+                    <div class="space-y-1.5">
+                        <p class="font-bold text-slate-800"><i class="fas fa-check-circle text-purple-500 mr-1.5"></i><b>${week} Minggu:</b> ${weekData}</p>
+                        <p class="text-slate-500"><i class="fas fa-heart text-pink-400 mr-1.5"></i>${advice}</p>
+                    </div>
+                `;
+            }
+
+            // Highlight buttons
+            document.querySelectorAll('.smart-week-btn').forEach(btn => {
+                const w = parseInt(btn.getAttribute('data-week'));
+                if (w === week) {
+                    btn.classList.add('border-purple-400', 'bg-purple-50', 'ring-2', 'ring-purple-200');
+                    btn.classList.remove('border-slate-200', 'bg-white');
+                } else {
+                    btn.classList.remove('border-purple-400', 'bg-purple-50', 'ring-2', 'ring-purple-200');
+                    btn.classList.add('border-slate-200', 'bg-white');
+                }
+            });
+        }
+
+        function calcSmartCustomWeek(val) {
+            const w = parseInt(val);
+            if (!isNaN(w) && w >= 4 && w <= 42) {
+                selectSmartWeek(w);
+            }
         }
 
         let fetalChartInstance = null;
